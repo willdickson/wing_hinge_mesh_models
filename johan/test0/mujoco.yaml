@@ -1,0 +1,73 @@
+compiler: 
+  angle: radian
+
+option:
+  gravity: [0.0, 0.0, -9.81]
+  timestep: 0.005
+
+worldbody: 
+
+  body_tree:
+    label: pwp 
+    meshfile: 'mesh/orig/pwp.stl'
+    children:
+      - 
+        label: ii_sclerite 
+        meshfile: 'mesh/orig/ii_sclerite.stl'
+        density: 1.0e-3
+        joint:
+          type: hinge
+          parameters:
+            pos: ii_sclerite_axis_DatumPoint
+            axis: ii_sclerite_axis_DatumLine
+            limited: false 
+            springref: 0
+        children:
+          -
+            label: i_sclerite
+            meshfle: 'mesh/orig/i_sclerite.stl'
+
+
+
+contact:
+  -
+    type: exclude
+    parameters:
+      name: exclude1
+      body1: pwp 
+      body2: ii_sclerite
+  -
+    type: exclude
+    parameters:
+      name: exclude2
+      body1: pwp 
+      body2: i_sclerite
+  -
+    type: exclude
+    parameters:
+      name: exclude3
+      body1: ii_sclerite 
+      body2: i_sclerite
+
+actuator:
+
+  -
+    type: position
+    parameters:
+      name: ii_sclerite_position
+      joint: ii_sclerite_joint
+      gear: 1
+      forcelimited: false
+      ctrllimited: false
+      kp: 1.e2
+
+  -
+    type: velocity
+    parameters:
+      name: ii_sclerite_velocity
+      joint: ii_sclerite_joint
+      gear: 1
+      forcelimited: false
+      ctrllimited: false
+      kv: 1.0e1
+

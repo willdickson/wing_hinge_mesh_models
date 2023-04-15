@@ -1,0 +1,11 @@
+*~
+*.egg-info
+*.pyc
+*.swp
+*.lock
+*.hdf5
+*.FCStd1
+build
+dist
+__pycache__
+MUJOCO_LOG.TXT
