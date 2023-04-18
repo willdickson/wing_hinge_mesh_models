@@ -6,9 +6,13 @@
     <mesh file="./mesh_files/base.stl"/>
     <mesh file="./mesh_files/sla.stl"/>
     <mesh file="./mesh_files/pwp.stl"/>
-    <material name="color_0" rgba="0.67 0.33 1.00 1.00"/>
-    <material name="color_1" rgba="1.00 0.67 0.00 1.00"/>
+    <mesh file="./mesh_files/ii_sclerite.stl"/>
+    <mesh file="./mesh_files/i_sclerite.stl"/>
+    <material name="color_0" rgba="1.00 0.67 0.00 1.00"/>
+    <material name="color_1" rgba="0.00 0.33 1.00 1.00"/>
     <material name="color_2" rgba="0.80 0.80 0.80 1.00"/>
+    <material name="color_3" rgba="0.67 0.33 1.00 1.00"/>
+    <material name="color_4" rgba="1.00 0.00 0.00 1.00"/>
     <texture name="grid" type="2d" builtin="checker" width="512" height="512" rgb1="0.0 0.0 0.0" rgb2="0.8 0.8 0.8"/>
     <material name="grid" texture="grid" texrepeat="10 10" texuniform="false" reflectance=".2"/>
   </asset>
@@ -18,21 +22,40 @@
     <body name="base" pos="0.0 0.0 0.0" quat="1.0 0.0 0.0 0.0">
       <geom name="base_mesh" type="mesh" mesh="base" material="color_2" pos="0.0 0.0 0.0" quat="1.0 0.0 0.0 0.0"/>
       <body name="sla" pos="0.0 0.0 0.0" quat="1.0 0.0 0.0 0.0">
-        <geom name="sla_mesh" type="mesh" mesh="sla" material="color_0" pos="0.0 0.0 0.0" quat="1.0 0.0 0.0 0.0" density="0.001"/>
+        <geom name="sla_mesh" type="mesh" mesh="sla" material="color_3" pos="0.0 0.0 0.0" quat="1.0 0.0 0.0 0.0" density="1e-05"/>
         <joint name="sla_joint" type="hinge" pos="-9.032322 -4.499999999999997 12.984983" axis="0.0 1.0 -4.440892098500626e-16" limited="false" springref="0"/>
       </body>
       <body name="pwp" pos="0.0 0.0 0.0" quat="1.0 0.0 0.0 0.0">
-        <geom name="pwp_mesh" type="mesh" mesh="pwp" material="color_1" pos="0.0 0.0 0.0" quat="1.0 0.0 0.0 0.0" density="1.0e3"/>
+        <geom name="pwp_mesh" type="mesh" mesh="pwp" material="color_0" pos="0.0 0.0 0.0" quat="1.0 0.0 0.0 0.0" density="1.0e5"/>
+        <body name="ii_sclerite" pos="0.0 0.0 0.0" quat="1.0 0.0 0.0 0.0">
+          <geom name="ii_sclerite_mesh" type="mesh" mesh="ii_sclerite" material="color_1" pos="0.0 0.0 0.0" quat="1.0 0.0 0.0 0.0" density="1e-05"/>
+          <joint name="ii_sclerite_joint_0" type="hinge" pos="0.865263472508401 2.399999999999999 3.5938766252971392" axis="-0.8480480961564262 2.220446049250313e-16 -0.5299192642332051" limited="false" springref="0" stiffness="1.0" damping="0.1"/>
+          <joint name="ii_sclerite_joint_1" type="hinge" pos="0.865263472508401 2.399999999999999 3.5938766252971392" axis="-0.5299192642332049 -1.6653345369377348e-16 0.8480480961564261" limited="false" springref="0" stiffness="1.0" damping="0.1"/>
+          <body name="i_sclerite" pos="0.0 0.0 0.0" quat="1.0 0.0 0.0 0.0">
+            <geom name="i_sclerite_mesh" type="mesh" mesh="i_sclerite" material="color_4" pos="0.0 0.0 0.0" quat="1.0 0.0 0.0 0.0" density="1e-05"/>
+            <joint name="i_sclerite_joint" type="hinge" pos="-0.544486953038523 3.105340237471229 4.525751720442733" axis="0.5383487250279178 -0.8176897167946992 0.2038729440338274" limited="false" springref="0"/>
+          </body>
+        </body>
       </body>
     </body>
   </worldbody>
+  <equality>
+    <connect body1="sla" body2="i_sclerite" anchor="-0.1 1.1 3.8" solimp="1.0 1.0 0.001 0.5 2.0"/>
+  </equality>
   <contact>
-    <exclude name="exclude1" body1="sla" body2="base"/>
-    <exclude name="exclude2" body1="pwp" body2="base"/>
-    <exclude name="exclude3" body1="sla" body2="pwp"/>
+    <exclude body1="sla" body2="base"/>
+    <exclude body1="pwp" body2="base"/>
+    <exclude body1="sla" body2="pwp"/>
+    <exclude body1="ii_sclerite" body2="pwp"/>
+    <exclude body1="ii_sclerite" body2="sla"/>
+    <exclude body1="ii_sclerite" body2="base"/>
+    <exclude body1="i_sclerite" body2="pwp"/>
+    <exclude body1="i_sclerite" body2="sla"/>
+    <exclude body1="i_sclerite" body2="base"/>
+    <exclude body1="i_sclerite" body2="ii_sclerite"/>
   </contact>
   <actuator>
-    <position name="sla_position" joint="sla_joint" gear="1" forcelimited="false" ctrllimited="false" kp="1.0e3"/>
-    <velocity name="sla_velocity" joint="sla_joint" gear="1" forcelimited="false" ctrllimited="false" kv="1.0e2"/>
+    <position name="sla_position" joint="sla_joint" gear="1" forcelimited="false" ctrllimited="false" kp="3.e2"/>
+    <velocity name="sla_velocity" joint="sla_joint" gear="1" forcelimited="false" ctrllimited="false" kv="1.0e1"/>
   </actuator>
 </mujoco>

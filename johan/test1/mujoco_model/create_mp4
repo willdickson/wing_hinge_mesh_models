@@ -1,0 +1,1 @@
+ffmpeg -i output.avi -c:v copy -c:a copy -y hinge_model.mp4

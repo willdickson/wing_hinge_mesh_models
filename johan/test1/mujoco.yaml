@@ -14,7 +14,7 @@ worldbody:
       - 
         label: sla 
         meshfile: './mesh/orig/sla.stl'
-        density: 1.0e-3
+        density: 1.0e-5
         joint:
           type: hinge
           parameters:
@@ -23,31 +23,107 @@ worldbody:
             limited: false 
             springref: 0
       - 
-        label: pwp
-        meshfile: './mesh/orig/pwp.stl'
-        density: 1.0e3
+        label: pwp 
+        meshfile: 'mesh/orig/pwp.stl'
+        density: 1.0e5
+        children:
+          - 
+            label: ii_sclerite 
+            meshfile: 'mesh/orig/ii_sclerite.stl'
+            density: 1.0e-5
+            joint:
+              -
+                type: hinge
+                parameters:
+                  pos: ii_sclerite_axis_DatumPoint
+                  axis: ii_sclerite_axis1_DatumLine
+                  limited: false 
+                  springref: 0
+                  stiffness: 1.0
+                  damping: 0.1
+              -
+                type: hinge
+                parameters:
+                  pos: ii_sclerite_axis_DatumPoint
+                  axis: ii_sclerite_axis2_DatumLine
+                  limited: false 
+                  springref: 0
+                  stiffness: 1.0
+                  damping: 0.1
+            children:
+              -
+                label: i_sclerite
+                meshfle: 'mesh/orig/i_sclerite.stl'
+                density: 1.0e-5
+                joint:
+                  type: hinge
+                  parameters:
+                    pos: i_sclerite_axis_DatumPoint
+                    axis: i_sclerite_axis_DatumLine
+                    limited: false 
+                    springref: 0
 
+equality:
+  -
+    type: connect
+    parameters:
+      body1: sla 
+      body2: i_sclerite 
+      anchor: i_sclerite_DatumPoint
+      solimp: [1.0, 1.0, 0.001, 0.5, 2.0] 
 
 
 contact:
   -
     type: exclude
     parameters:
-      name: exclude1
       body1: sla 
       body2: base 
   -
     type: exclude
     parameters:
-      name: exclude2
       body1: pwp 
       body2: base
   -
     type: exclude
     parameters:
-      name: exclude3
       body1: sla
       body2: pwp
+  -
+    type: exclude
+    parameters:
+      body1: ii_sclerite
+      body2: pwp 
+  -
+    type: exclude
+    parameters:
+      body1: ii_sclerite
+      body2: sla 
+  -
+    type: exclude
+    parameters:
+      body1: ii_sclerite
+      body2: base 
+  -
+    type: exclude
+    parameters:
+      body1: i_sclerite
+      body2: pwp 
+  -
+    type: exclude
+    parameters:
+      body1: i_sclerite
+      body2: sla 
+  -
+    type: exclude
+    parameters:
+      body1: i_sclerite
+      body2: base 
+  -
+    type: exclude
+    parameters:
+      body1: i_sclerite
+      body2: ii_sclerite 
 
 actuator:
 
@@ -59,7 +135,7 @@ actuator:
       gear: 1
       forcelimited: false
       ctrllimited: false
-      kp: 1.e2
+      kp: 3.e2
 
   -
     type: velocity
@@ -71,3 +147,42 @@ actuator:
       ctrllimited: false
       kv: 1.0e1
 
+        #  -
+        #    type: position
+        #    parameters:
+        #      name: ii_sclerite_position
+        #      joint: ii_sclerite_joint
+        #      gear: 1
+        #      forcelimited: false
+        #      ctrllimited: false
+        #      kp: 1.e2
+        #
+        #  -
+        #    type: velocity
+        #    parameters:
+        #      name: ii_sclerite_velocity
+        #      joint: ii_sclerite_joint
+        #      gear: 1
+        #      forcelimited: false
+        #      ctrllimited: false
+        #      kv: 1.0e1
+        #
+        #  -
+        #    type: position
+        #    parameters:
+        #      name: i_sclerite_position
+        #      joint: i_sclerite_joint
+        #      gear: 1
+        #      forcelimited: false
+        #      ctrllimited: false
+        #      kp: 1.e1
+        #
+        #  -
+        #    type: velocity
+        #    parameters:
+        #      name: i_sclerite_velocity
+        #      joint: i_sclerite_joint
+        #      gear: 1
+        #      forcelimited: false
+        #      ctrllimited: false
+        #      kv: 1.0e0

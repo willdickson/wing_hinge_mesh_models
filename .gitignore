@@ -5,6 +5,7 @@
 *.lock
 *.hdf5
 *.FCStd1
+frames
 build
 dist
 __pycache__

@@ -69,7 +69,7 @@ if __name__ == '__main__':
     viewer.cam.lookat = [0.0, 0.0, 0.0]
     
     period = 0.5
-    sla_amplitude = np.deg2rad(2.5)
+    sla_amplitude = np.deg2rad(5.0)
     sla_phase = np.deg2rad(180.0)
     sla_offset = sla_amplitude 
 
@@ -98,7 +98,7 @@ if __name__ == '__main__':
         except:
             done = True
 
-        time.sleep(0.01)
+        #time.sleep(0.01)
     viewer.close()
 
 
