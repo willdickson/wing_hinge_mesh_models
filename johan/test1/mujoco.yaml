@@ -1,0 +1,73 @@
+compiler: 
+  angle: radian
+
+option:
+  gravity: [0.0, 0.0, -9.81]
+  timestep: 0.005
+
+worldbody: 
+
+  body_tree:
+    label: base 
+    meshfile: './mesh/orig/base.stl'
+    children:
+      - 
+        label: sla 
+        meshfile: './mesh/orig/sla.stl'
+        density: 1.0e-3
+        joint:
+          type: hinge
+          parameters:
+            pos: sla_axis_DatumPoint
+            axis: sla_axis_DatumLine
+            limited: false 
+            springref: 0
+      - 
+        label: pwp
+        meshfile: './mesh/orig/pwp.stl'
+        density: 1.0e3
+
+
+
+contact:
+  -
+    type: exclude
+    parameters:
+      name: exclude1
+      body1: sla 
+      body2: base 
+  -
+    type: exclude
+    parameters:
+      name: exclude2
+      body1: pwp 
+      body2: base
+  -
+    type: exclude
+    parameters:
+      name: exclude3
+      body1: sla
+      body2: pwp
+
+actuator:
+
+  -
+    type: position
+    parameters:
+      name: sla_position
+      joint: sla_joint
+      gear: 1
+      forcelimited: false
+      ctrllimited: false
+      kp: 1.e2
+
+  -
+    type: velocity
+    parameters:
+      name: sla_velocity
+      joint: sla_joint
+      gear: 1
+      forcelimited: false
+      ctrllimited: false
+      kv: 1.0e1
+
